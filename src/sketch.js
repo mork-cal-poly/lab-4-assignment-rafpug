@@ -1,3 +1,19 @@
+//Control Panel
+let densityX = 10 // # of objects in each row
+let densityY = 10 // # of objects in each column
+let maxSpread = 30 // 0=uniform grid; controls the chaos
+let defSize = 2 // Default Size in diameter
+let sizeVariance = 1 // Chaotic size change
+let static = true // true=single RNG; false = RNG every frame
+let suprise = false
+
+//Logs for corresponding RNG variables that we don't want changed every frame
+let randomLogX = [];
+let randomLogY = [];
+let randomLogS = [];
+
+let animationFrame = 0
+
 function setup() {
   // These lines are fitting our canvas
   // where we want in the DOM
@@ -5,14 +21,59 @@ function setup() {
   // easier
   let myCanvas = createCanvas(400, 400);
   myCanvas.parent("canvas-parent");
+  randomLogger()
+}
+
+function randomLogger() {
+  for (x=0; x<densityX; x++) {
+    for (y=0;y<densityY; y++) {
+      randomLogX[randomLogX.length] = random(-maxSpread,maxSpread)
+      randomLogY[randomLogY.length] = random(-maxSpread,maxSpread)
+      randomLogS[randomLogS.length] = random(-sizeVariance,sizeVariance)
+    }
+  }
 }
 
 function draw() {
-  background(220);
+  background(0);
+  drawBackground(200,200,0,1,color(255),-0.03)// 2 backgrounds for
+  drawBackground(200,200,0,1,color(255),0.1)//   spiral illusion
 
   drawCreature(200,200,color(224,221,1),color(224,194,0), 0.5)
 
   drawEye(100,100)
+
+  animationFrame++
+}
+
+function drawBackground(tX,tY,rot,size,clr,anim){
+  push();
+  // Last parameter "anim" allows for each background to have unique animations as it is the amplitude of the sinusoidal
+  let animTrans = anim*sin(animationFrame/200)
+  noStroke()
+  translate(width/2,height/2)
+  scale(size+animTrans)
+  rotate(rot+animTrans)
+  fill(clr)
+  
+  let seed = 0 //Index defining the RNG of the current object
+  for (x=0; x<densityX; x++) {
+    for (y=0;y<densityY; y++) {
+      let xCord = width/densityX*x-width/2 //Makes equal rows
+      let yCord = height/densityY*y-height/2 // Makes equal columns
+      
+      if (static == true) { // Uses saved RNG values
+        circle(xCord+randomLogX[seed],
+             yCord+randomLogY[seed], defSize+randomLogS[seed])
+      } else { //Uses new RNG values every frame
+        circle(xCord+random(-maxSpread,maxSpread),
+             yCord+random(-maxSpread,maxSpread),
+              defSize+randomLogS[seed])
+      }
+      seed++
+    }
+  }
+  pop();
 }
 
 function drawCreature(xOffSet,yOffSet,mainColor,altColor,size){
