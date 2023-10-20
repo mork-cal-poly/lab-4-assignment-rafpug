@@ -11,6 +11,8 @@ function draw() {
   background(220);
 
   drawCreature(200,200,color(224,221,1),color(224,194,0), 0.5)
+
+  drawEye(100,100)
 }
 
 function drawCreature(xOffSet,yOffSet,mainColor,altColor,size){
@@ -76,3 +78,60 @@ function drawCreature(xOffSet,yOffSet,mainColor,altColor,size){
     ellipse(-310,-28,20,5); // Tail Top
   pop();
 }
+
+function drawEye(x,y){
+  push();
+    translate(x,y)
+    
+  //EyeBall
+    fill(250)
+    circle(0,0,200)
+  
+  //Iris
+    fill(60,20,0)
+    circle(0,0,100)
+    fill(0)
+    for(i=0.5;i<PI*2;i+=PI/2) {
+      irisDetails(i)
+    }
+    for(i=0;i<PI*2;i+=PI/12) {
+      irisLongLines(i/2)
+    }
+  
+  //Pupil
+    fill(0)
+    circle(0,0,50)
+  
+  //Vein #1
+    stroke(255,0,0,100)
+    for(i=0;i<PI*2;i+=PI/4){
+      drawVein(i,1)
+    }
+
+    function irisDetails(rot){
+      rotate(rot)
+      triangle(0,25,-3,50,3,50)
+    }
+    
+    function irisLongLines(rot){
+      rotate(rot)
+      line(0,25,0,50)
+    }
+    
+    function drawVein(rot,size) {
+      rotate(rot);
+      scale(size);
+      line(80,-10,100,0)
+        line(80,-25,95,-25)
+        line(80,-10,80,-25)
+        line(80,-10,70,-5)
+        line(70,-5,60,-15)
+        line(80,-10,60,-35)
+        line(60,-35,45,-30)
+        line(60,-35,70,-38)
+        line(70,-38,75,-42)
+        line(75,-42,90,-42)
+    }
+  pop();
+}
+
