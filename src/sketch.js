@@ -5,7 +5,6 @@ let maxSpread = 30 // 0=uniform grid; controls the chaos
 let defSize = 2 // Default Size in diameter
 let sizeVariance = 1 // Chaotic size change
 let static = true // true=single RNG; false = RNG every frame
-let suprise = false
 
 //Logs for corresponding RNG variables that we don't want changed every frame
 let randomLogX = [];
@@ -13,6 +12,9 @@ let randomLogY = [];
 let randomLogS = [];
 
 let animationFrame = 0
+let animationPug = -400
+let animationEye = 0
+let Animate = false
 
 function setup() {
   // These lines are fitting our canvas
@@ -38,10 +40,20 @@ function draw() {
   background(0);
   drawBackground(200,200,0,1,color(255),-0.03)// 2 backgrounds for
   drawBackground(200,200,0,1,color(255),0.1)//   spiral illusion
+  if (Animate == false) {
+    drawCreature(400,200,color(224,221,1),color(224,194,0), 0.5)
 
-  drawCreature(200,200,color(224,221,1),color(224,194,0), 0.5)
+    drawEye(-100,100)
+  } else {
+    animationPug += 2
+    if (animationPug > 0) {
+      animationEye += 1
+    }
+    let animX = 0.00125*animationPug**2+200
+    drawCreature(animX,200,color(224,221,1),color(224,194,0), 0.5)
 
-  drawEye(100,100)
+    drawEye(animationEye-100,100)
+  }
 
   animationFrame++
 }
@@ -80,7 +92,7 @@ function drawCreature(xOffSet,yOffSet,mainColor,altColor,size){
   push();
     translate(xOffSet,yOffSet);
     strokeWeight(0.5);
-    scale(size);
+    scale(-size,size);
   
     //Body Components
     fill(altColor); // Light Peach Color
@@ -196,3 +208,8 @@ function drawEye(x,y){
   pop();
 }
 
+function mousePressed(){
+  if (mouseX > 375){
+    Animate = true
+  }
+}
