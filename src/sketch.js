@@ -1,9 +1,9 @@
 //Control Panel
-let densityX = 10 // # of objects in each row
-let densityY = 10 // # of objects in each column
-let maxSpread = 30 // 0=uniform grid; controls the chaos
-let defSize = 2 // Default Size in diameter
-let sizeVariance = 1 // Chaotic size change
+let densityX = 20 // # of objects in each row
+let densityY = 20 // # of objects in each column
+let maxSpread = 5 // 0=uniform grid; controls the chaos
+let defSize = 10 // Default Size in diameter
+let sizeVariance = 40 // Chaotic size change
 let static = true // true=single RNG; false = RNG every frame
 
 //Logs for corresponding RNG variables that we don't want changed every frame
@@ -37,22 +37,28 @@ function randomLogger() {
 }
 
 function draw() {
-  background(0);
-  drawBackground(200,200,0,1,color(255),-0.03)// 2 backgrounds for
-  drawBackground(200,200,0,1,color(255),0.1)//   spiral illusion
+  background(255);
+  drawBackground(200,200,0,1,color(0),-0.03)// 2 backgrounds for
+  drawBackground(200,200,0,1,color(0),0.1)//   spiral illusion
+
   if (Animate == false) {
-    drawCreature(400,200,color(224,221,1),color(224,194,0), 0.5)
+    drawCreature(400,300,color(224,221,1),color(224,194,0), -0.5)
 
     drawEye(-100,100)
+    //[Insert a Stationary Creature Function Here]
   } else {
+
     animationPug += 2
+    let animX = 0.00125*animationPug**2+200
     if (animationPug > 0) {
       animationEye += 1
+      drawCreature(animX,300,color(224,221,1),color(224,194,0), 0.5)
+      //[Insert Variable Animation Here]
+    } else {
+      drawCreature(animX,300,color(224,221,1),color(224,194,0), -0.5)
     }
-    let animX = 0.00125*animationPug**2+200
-    drawCreature(animX,200,color(224,221,1),color(224,194,0), 0.5)
-
     drawEye(animationEye-100,100)
+    //[Insert Function with Animated Parameters Here]
   }
 
   animationFrame++
@@ -92,7 +98,7 @@ function drawCreature(xOffSet,yOffSet,mainColor,altColor,size){
   push();
     translate(xOffSet,yOffSet);
     strokeWeight(0.5);
-    scale(-size,size);
+    scale(size,0.5);
   
     //Body Components
     fill(altColor); // Light Peach Color
